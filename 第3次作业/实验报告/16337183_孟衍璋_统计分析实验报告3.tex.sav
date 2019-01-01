@@ -1,0 +1,48 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr} %设置页脚页眉需要的包
+\usepackage{enumerate}
+\usepackage{graphicx}   %添加宏包插图
+\CTEXsetup[format={\Large\bfseries}]{section} %让section不居中，而是靠右
+
+\pagestyle{fancy}
+\lhead{使用PCA进行图像压缩}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{统计分析方法作业3}
+\author{16337183 孟衍璋}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{实验目的}
+\indent 使用PCA进行图像压缩。\\
+\section{实验要求}
+\indent 输入一张灰度图片Lena，放大到$256*256$，使用PCA方法把原始图片分别按照$2:1$、$8:1$、$32:1$进行压缩，即压缩后的数据量为原始图片的$1/2$、$1/8$、$1/32$。 分析压缩后的数据所含信息量大小，并比较压缩数据再经过重建后与原始图片的视觉差异。\\
+\indent 把图像分割成很多块$16*16$，把每个小图像块看成不同的样本点，一个小图像块内每个像素是样本点的不同维度。\\
+\section{实验步骤}
+\indent 首先，实验要求里写到要先将图片分成$16*16$的小块，由于图像的像素为$512*512$，所以相当于要分成$32 * 32 = 1024$个小块。\\
+\indent 这部分的代码如下：\\
+
+\includegraphics[width=4.00in,height=3.00in]{figure1}
+
+\indent 这样便将每一小块图形存入了变量X中。\\
+
+\indent 然后就开始分别对每一小块进行主成分分析，并使用对应的主成分重构图像：\\
+
+\includegraphics[width=4.00in,height=3.40in]{figure2}
+
+\indent 使用$PCA$进行图像压缩并重构之后，还需要将之前的小块合成为一张图，代码实现如下：\\
+
+\includegraphics[width=5.00in,height=2.00in]{figure3} \\
+
+\indent 之后想要在$matlab$中显示图像的时候遇到了一个问题。输出的图像总是白色的，而且使用函数$imwrite()$存储得到的图片也是白色的。经过查询之后才得知，原来是之前读取的图像被转换为$double$类型，这时如果直接用$imwrite()$保存图片的话，就会出现全是白色的情况，因为在转化图像类型的时候，图像的像素值虽然变为$double$数据类型，但是取值范围仍然是$0-255$，$imwrite()$处理$double$类型的时候期待的数据范围是$0-1$，会把大于$1$的值当作$1$处理，这样几乎所有的像素都变成了白色。\\
+\indent 所以这个时候就要先用函数$uint8()$转化数据类型，这样输出的图片就没有问题了。\\
+
+最后就还需要计算信息量
+
+\end{document}
